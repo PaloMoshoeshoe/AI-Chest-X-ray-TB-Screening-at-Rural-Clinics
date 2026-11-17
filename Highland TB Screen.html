@@ -1,0 +1,1050 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Highland TB Screen</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: app shell. Top bar with product name and view tabs, a woven-blanket band, then a
+   two-column workspace (phone simulator | working panel) that stacks to one column on phones. */
+:root {
+  --bg: #F2F4F3;
+  --surface: #FFFFFF;
+  --surface-2: #E8ECEB;
+  --surface-3: #DDE3E1;
+  --ink: #16201E;
+  --ink-2: #4B5856;
+  --ink-3: #6E7B78;
+  --line: #D2DAD8;
+  --good: #23784A;
+  --good-soft: #DDF0E5;
+  --warn: #9A6300;
+  --warn-soft: #FBEBCB;
+  --crit: #B3261E;
+  --crit-soft: #F9DEDC;
+  --bezel: #1B2423;
+  --screen: #FBFCFB;
+  --ussd-bg: #10201A;
+  --ussd-ink: #B9F5CF;
+  --shadow: 0 1px 2px rgba(16, 24, 22, .06), 0 8px 24px rgba(16, 24, 22, .06);
+  --f-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "Atkinson Hyperlegible", "Segoe UI", Roboto, Arial, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --r: 10px;
+  --r-s: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1514; --surface: #172020; --surface-2: #1E2928; --surface-3: #263332;
+    --ink: #E5ECEA; --ink-2: #A9B6B3; --ink-3: #85938F; --line: #2D3A38;
+    --good: #5CCB8D; --good-soft: #17342A; --warn: #E7AE48; --warn-soft: #3A2D12;
+    --crit: #F2857C; --crit-soft: #3D1D1B; --bezel: #050808; --screen: #121A19;
+    --ussd-bg: #07120D; --ussd-ink: #9CEDB9;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .3);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1514; --surface: #172020; --surface-2: #1E2928; --surface-3: #263332;
+  --ink: #E5ECEA; --ink-2: #A9B6B3; --ink-3: #85938F; --line: #2D3A38;
+  --good: #5CCB8D; --good-soft: #17342A; --warn: #E7AE48; --warn-soft: #3A2D12;
+  --crit: #F2857C; --crit-soft: #3D1D1B; --bezel: #050808; --screen: #121A19;
+  --ussd-bg: #07120D; --ussd-ink: #9CEDB9;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .3);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 15px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 10; background: var(--surface);
+}
+h1, h2, h3, h4 { font-family: var(--f-display); margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+h2 { font-size: 1.15rem; font-weight: 700; }
+h3 { font-size: .98rem; font-weight: 700; }
+p { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; }
+.muted { color: var(--ink-2); }
+.small { font-size: .82rem; }
+.mono { font-family: var(--f-mono); }
+
+/* ---------- top bar ---------- */
+.topbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--surface); border-bottom: 1px solid var(--line);
+}
+.topbar-in {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px;
+  padding-block: 10px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  max-width: 1280px; margin: 0 auto;
+}
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand-mark {
+  width: 34px; height: 34px; border-radius: 8px; flex: none;
+  background: var(--accent); color: var(--accent-ink);
+  display: grid; place-items: center; font-family: var(--f-display); font-weight: 800; font-size: 1rem;
+}
+.brand-name { font-family: var(--f-display); font-weight: 800; font-size: 1.12rem; line-height: 1.1; }
+.brand-sub { font-size: .78rem; color: var(--ink-2); line-height: 1.2; }
+.proto-pill {
+  font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  border: 1px solid var(--warn); color: var(--warn); background: var(--warn-soft);
+  padding: 2px 8px; border-radius: 99px; white-space: nowrap;
+}
+.tabs { display: flex; gap: 4px; margin-left: auto; flex-wrap: wrap; }
+.tab {
+  border: 1px solid transparent; background: transparent; padding: 7px 12px; border-radius: 8px;
+  cursor: pointer; font-weight: 700; color: var(--ink-2); text-decoration: none; font-size: .9rem;
+}
+.tab:hover { background: var(--surface-2); color: var(--ink); }
+.tab[aria-current="page"] { background: var(--accent-soft); color: var(--accent-strong); border-color: var(--accent-line); }
+.ai-pill {
+  display: inline-flex; align-items: center; gap: 6px; font-size: .78rem; color: var(--ink-2);
+  border: 1px solid var(--line); border-radius: 99px; padding: 3px 9px; background: var(--surface);
+}
+.ai-pill i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-3); display: inline-block; }
+.ai-pill[data-state="on"] i { background: var(--good); }
+.ai-pill[data-state="off"] i { background: var(--crit); }
+
+/* Woven band: stripes after the colour blocks of a Basotho wool blanket */
+.band {
+  height: 8px;
+  background:
+    repeating-linear-gradient(90deg,
+      var(--accent) 0 28px, var(--ink) 28px 31px, var(--band-2) 31px 52px,
+      var(--ink) 52px 55px, var(--band-3) 55px 70px, var(--ink) 70px 73px);
+  opacity: .9;
+}
+
+/* ---------- page ---------- */
+.wrap {
+  max-width: 1280px; margin: 0 auto;
+  padding-block: 20px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 18px;
+}
+.notice {
+  display: flex; gap: 10px; align-items: flex-start;
+  border: 1px solid var(--line); background: var(--surface); border-radius: var(--r);
+  padding: 10px 14px; font-size: .86rem; color: var(--ink-2);
+}
+.notice b { color: var(--ink); }
+.view[hidden] { display: none !important; }
+.split { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); gap: 20px; align-items: start; }
+.split.even { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+@media (max-width: 880px) { .split, .split.even { grid-template-columns: minmax(0, 1fr); } }
+.inline-field { display: flex; align-items: center; gap: 6px; }
+.inline-field > span { font-size: .8rem; font-weight: 700; color: var(--ink-2); }
+.inline-field .input { width: auto; }
+.stack { display: grid; gap: 16px; min-width: 0; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.grow { flex: 1 1 auto; min-width: 0; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r);
+  padding: 16px; min-width: 0;
+}
+.card-h { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 12px; margin-bottom: 12px; }
+.card-h p { font-size: .84rem; color: var(--ink-2); }
+.eyebrow { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+
+/* KPI strip */
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; }
+.kpi .v { font-family: var(--f-display); font-weight: 800; font-size: 1.7rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.kpi .l { font-size: .8rem; color: var(--ink-2); }
+.kpi .s { font-size: .76rem; color: var(--ink-3); margin-top: 2px; }
+.kpi[data-tone="warn"] { border-color: var(--warn); }
+.kpi[data-tone="crit"] { border-color: var(--crit); }
+.kpi[data-tone="warn"] .v { color: var(--warn); }
+.kpi[data-tone="crit"] .v { color: var(--crit); }
+
+/* buttons & fields */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  padding: 7px 12px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: .88rem;
+  text-decoration: none; white-space: nowrap;
+}
+.btn:hover { background: var(--surface-2); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { filter: brightness(1.07); }
+.btn.ghost { background: transparent; border-color: transparent; color: var(--accent-strong); }
+.btn.sm { padding: 4px 9px; font-size: .8rem; }
+.btn svg { width: 16px; height: 16px; }
+.field { display: grid; gap: 4px; min-width: 0; }
+.field > span { font-size: .8rem; font-weight: 700; color: var(--ink-2); }
+.input, select.input, textarea.input {
+  width: 100%; border: 1px solid var(--line); background: var(--surface); border-radius: 8px;
+  padding: 8px 10px; min-width: 0;
+}
+textarea.input { resize: vertical; min-height: 70px; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+.checks { display: flex; flex-wrap: wrap; gap: 6px; }
+.check {
+  display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); border-radius: 99px;
+  padding: 4px 10px; font-size: .84rem; cursor: pointer; background: var(--surface);
+}
+.check input { accent-color: var(--accent); }
+
+/* pills, chips */
+.pill {
+  display: inline-flex; align-items: center; gap: 4px; font-size: .74rem; font-weight: 700;
+  padding: 2px 8px; border-radius: 99px; border: 1px solid var(--line); background: var(--surface-2);
+  color: var(--ink-2); white-space: nowrap;
+}
+.pill.good { background: var(--good-soft); color: var(--good); border-color: transparent; }
+.pill.warn { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+.pill.crit { background: var(--crit-soft); color: var(--crit); border-color: transparent; }
+.pill.acc { background: var(--accent-soft); color: var(--accent-strong); border-color: transparent; }
+.chip {
+  display: inline-flex; align-items: center; font-size: .72rem; font-family: var(--f-mono);
+  padding: 1px 6px; border-radius: 4px; background: var(--accent-soft); color: var(--accent-strong);
+  border: 0; cursor: pointer;
+}
+
+/* tables */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table { width: 100%; border-collapse: collapse; font-size: .86rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .74rem; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3); background: var(--surface-2); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* horizontal bars */
+.bars { display: grid; gap: 8px; }
+.bar-row { display: grid; grid-template-columns: minmax(90px, 150px) minmax(0, 1fr) auto; gap: 10px; align-items: center; font-size: .85rem; }
+.bar-track { height: 12px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; background: var(--ink-3); border-radius: 3px; }
+.bar-row.hi .bar-fill { background: var(--accent); }
+.bar-row .bar-v { font-variant-numeric: tabular-nums; color: var(--ink-2); min-width: 2.5em; text-align: right; }
+
+/* list items */
+.list { display: grid; gap: 10px; }
+.item { border: 1px solid var(--line); border-radius: var(--r); padding: 12px; background: var(--surface); display: grid; gap: 6px; min-width: 0; }
+.item-h { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: .8rem; color: var(--ink-2); }
+.item q { quotes: none; font-weight: 700; color: var(--ink); }
+.empty { padding: 18px; text-align: center; color: var(--ink-2); font-size: .88rem; border: 1px dashed var(--line); border-radius: var(--r); }
+
+/* ---------- phone simulator ---------- */
+.phone {
+  width: 100%; max-width: 380px; margin: 0 auto;
+  background: var(--bezel); border-radius: 30px; padding: 10px; box-shadow: var(--shadow);
+}
+.phone-screen {
+  background: var(--screen); border-radius: 22px; overflow: hidden;
+  display: grid; grid-template-rows: auto auto auto minmax(0, 1fr) auto; height: 640px; max-height: 78vh;
+}
+.phone-status {
+  display: flex; justify-content: space-between; font-size: .72rem; font-weight: 700; padding: 8px 16px 2px;
+  font-family: var(--f-mono); color: var(--ink-2);
+}
+.phone-head {
+  display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+.phone-head .who { font-weight: 700; font-size: .92rem; line-height: 1.15; }
+.phone-head .who small { display: block; font-weight: 400; color: var(--ink-2); font-size: .74rem; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-weight: 800; font-size: .85rem; flex: none; }
+.channels { display: flex; gap: 4px; padding: 6px 8px; background: var(--surface-2); border-bottom: 1px solid var(--line); }
+.channels button {
+  flex: 1; border: 0; background: transparent; border-radius: 7px; padding: 6px 4px; font-size: .78rem; font-weight: 700;
+  color: var(--ink-2); cursor: pointer;
+}
+.channels button[aria-pressed="true"] { background: var(--surface); color: var(--accent-strong); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+.msgs { overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; min-height: 0; }
+.bubble {
+  max-width: 86%; padding: 8px 11px; border-radius: 14px; font-size: .9rem; line-height: 1.42;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.bubble.me { align-self: flex-end; background: var(--accent); color: var(--accent-ink); border-bottom-right-radius: 4px; }
+.bubble.bot { align-self: flex-start; background: var(--surface); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+.bubble.sys { align-self: center; background: transparent; color: var(--ink-3); font-size: .76rem; text-align: center; padding: 2px 8px; }
+.bubble .meta { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; align-items: center; }
+.bubble .meta .pill { font-size: .66rem; }
+.typing { color: var(--ink-3); font-style: italic; }
+.composer { display: flex; gap: 6px; padding: 8px; border-top: 1px solid var(--line); background: var(--surface); align-items: flex-end; }
+.composer textarea {
+  flex: 1; resize: none; border: 1px solid var(--line); border-radius: 18px; padding: 8px 12px;
+  background: var(--screen); min-height: 38px; max-height: 110px; font-size: .9rem; min-width: 0;
+}
+.round {
+  width: 38px; height: 38px; border-radius: 50%; border: 0; display: grid; place-items: center; cursor: pointer; flex: none;
+  background: var(--accent); color: var(--accent-ink);
+}
+.round.alt { background: var(--surface-2); color: var(--ink); }
+.round[data-live="true"] { background: var(--crit); color: #fff; animation: pulse 1.2s infinite; }
+.round svg { width: 18px; height: 18px; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 6px var(--crit-soft); } }
+@media (prefers-reduced-motion: reduce) { .round[data-live="true"] { animation: none; } }
+.quick { display: flex; gap: 6px; overflow-x: auto; padding: 0 12px 8px; }
+.quick button { flex: none; border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 4px 10px; font-size: .78rem; cursor: pointer; }
+
+/* USSD screen */
+.ussd { background: var(--ussd-bg); color: var(--ussd-ink); font-family: var(--f-mono); font-size: .86rem; padding: 16px; display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 10px; min-height: 0; }
+.ussd-box { border: 1px solid color-mix(in srgb, var(--ussd-ink) 40%, transparent); border-radius: 8px; padding: 12px; white-space: pre-wrap; overflow-y: auto; min-height: 0; line-height: 1.45; }
+.ussd-in { display: flex; gap: 6px; }
+.ussd-in input { flex: 1; background: transparent; border: 1px solid color-mix(in srgb, var(--ussd-ink) 50%, transparent); color: var(--ussd-ink); border-radius: 6px; padding: 6px 8px; font-family: var(--f-mono); min-width: 0; }
+.ussd-in button { background: var(--ussd-ink); color: var(--ussd-bg); border: 0; border-radius: 6px; padding: 6px 10px; font-weight: 700; font-family: var(--f-mono); cursor: pointer; }
+.ussd .hint { font-size: .72rem; opacity: .75; }
+
+/* Voice call screen */
+.call { display: grid; align-content: center; justify-items: center; gap: 14px; padding: 20px; text-align: center; background: linear-gradient(180deg, var(--accent-soft), var(--screen)); min-height: 0; overflow-y: auto; }
+.call .big { width: 72px; height: 72px; border-radius: 50%; }
+.call .big svg { width: 28px; height: 28px; }
+.call .line { font-size: .9rem; max-width: 30ch; }
+.call .heard { font-size: .82rem; color: var(--ink-2); min-height: 2.5em; }
+
+/* AI output box */
+.ai-out { border: 1px solid var(--accent-line); background: var(--accent-soft); border-radius: var(--r); padding: 12px 14px; white-space: pre-wrap; font-size: .9rem; min-height: 2.5em; }
+.ai-out:empty { display: none; }
+
+/* toast */
+.toast {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 20;
+  background: var(--ink); color: var(--bg); padding: 9px 14px; border-radius: 8px; font-size: .88rem;
+  box-shadow: var(--shadow); max-width: calc(100% - 32px);
+}
+.footer { font-size: .78rem; color: var(--ink-3); text-align: center; padding-top: 8px; }
+@media (max-width: 640px) { .topbar { position: static; } .tabs { margin-left: 0; width: 100%; } }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* TB Screen accent: clinical teal; band colours indigo and ochre-red from a highland blanket */
+:root {
+  --accent: #0F6B82; --accent-ink: #FFFFFF; --accent-strong: #0B5A6E;
+  --accent-soft: #DDEFF3; --accent-line: #A8D2DD;
+  --band-2: #4C579F; --band-3: #A8483A;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --accent: #5BC2DA; --accent-ink: #04191F; --accent-strong: #8AD7E9;
+    --accent-soft: #11313A; --accent-line: #1F4D59; --band-2: #7C86CC; --band-3: #D87566;
+  }
+}
+:root[data-theme="dark"] {
+  --accent: #5BC2DA; --accent-ink: #04191F; --accent-strong: #8AD7E9;
+  --accent-soft: #11313A; --accent-line: #1F4D59; --band-2: #7C86CC; --band-3: #D87566;
+}
+.steps { display: grid; gap: 14px; }
+.step { display: grid; gap: 10px; border: 1px solid var(--line); border-radius: var(--r); padding: 14px; background: var(--surface); }
+.step-h { display: flex; align-items: center; gap: 10px; }
+.step-n { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent-strong); font-weight: 800; font-size: .85rem; flex: none; }
+.code { font-family: var(--f-mono); font-weight: 600; font-size: 1.05rem; letter-spacing: .04em; }
+.xray { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 14px; align-items: center; }
+@media (max-width: 480px) { .xray { grid-template-columns: minmax(0, 1fr); } }
+.xray-img { width: 120px; height: 140px; border-radius: 8px; background: #0B0F10; display: grid; place-items: center; overflow: hidden; color: #8A9A9C; font-size: .72rem; text-align: center; padding: 6px; }
+.xray-img img { width: 100%; height: 100%; object-fit: cover; }
+.gauge { position: relative; height: 16px; border-radius: 99px; background: linear-gradient(90deg, var(--good-soft), var(--warn-soft) 55%, var(--crit-soft)); border: 1px solid var(--line); }
+.gauge .needle { position: absolute; top: -5px; width: 4px; height: 24px; border-radius: 2px; background: var(--ink); transform: translateX(-2px); transition: left .5s ease; }
+.gauge .thr { position: absolute; top: -3px; bottom: -3px; width: 0; border-left: 2px dashed var(--accent-strong); }
+.gauge-scale { display: flex; justify-content: space-between; font-size: .72rem; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.result { border-radius: var(--r); padding: 10px 12px; font-size: .9rem; }
+.result.pos { background: var(--crit-soft); color: var(--crit); border: 1px solid var(--crit); }
+.result.neg { background: var(--good-soft); color: var(--good); border: 1px solid var(--good); }
+.result b { color: inherit; }
+.sim { font-size: .72rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--warn); }
+.cascade { display: grid; gap: 10px; }
+.cas-row { display: grid; grid-template-columns: minmax(110px, 170px) minmax(0, 1fr) 4.5em; gap: 10px; align-items: center; font-size: .88rem; }
+.cas-track { height: 26px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.cas-fill { height: 100%; background: var(--accent); border-radius: 4px; opacity: .85; }
+.cas-row .drop { font-size: .74rem; color: var(--ink-3); }
+.cas-row .drop.bad { color: var(--crit); font-weight: 700; }
+.cas-n { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+tr.cur td { background: var(--accent-soft); font-weight: 700; }
+.chat { display: grid; gap: 8px; max-height: 340px; overflow-y: auto; padding: 2px; }
+.chat .bubble { max-width: 92%; }
+
+</style>
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">TB</div>
+      <div>
+        <div class="brand-name">Highland TB Screen</div>
+        <div class="brand-sub">Portable X-ray with AI reading · pilot prototype</div>
+      </div>
+      <span class="proto-pill">Prototype</span>
+    </div>
+    <nav class="tabs" aria-label="Views">
+      <a class="tab" href="#station" data-tab="station">Screening station</a>
+      <a class="tab" href="#programme" data-tab="programme">Programme dashboard</a>
+      <a class="tab" href="#protocol" data-tab="protocol">Protocol</a>
+    </nav>
+    <span class="ai-pill" id="aiPill" data-state="wait"><i></i><span>Connecting to Claude…</span></span>
+  </div>
+  <div class="band" aria-hidden="true"></div>
+</header>
+
+<main class="wrap">
+  <div class="notice" role="note">
+    <span><b>Demo prototype with synthetic data.</b> The X-ray score here is <b>simulated</b>; the pilot uses WHO-approved CAD software on the laptop.
+      Claude writes the explanations, protocol answers, SMS drafts and data answers live. No real patient data: people are identified by code only.</span>
+  </div>
+
+  <!-- STATION -->
+  <section class="view" data-view="station" aria-label="Screening station">
+    <div class="split even">
+      <form class="steps" id="screenForm" autocomplete="off">
+        <div class="step">
+          <div class="step-h"><span class="step-n">1</span><h2 class="grow">Register</h2><span class="code" id="pCode">—</span></div>
+          <div class="grid2">
+            <label class="field"><span>Screening site</span><select class="input" id="site"></select></label>
+            <label class="field"><span>Age (years)</span><input class="input" id="age" type="number" min="15" max="110" value="34" required></label>
+            <label class="field"><span>Sex</span><select class="input" id="sex"><option>Female</option><option>Male</option></select></label>
+            <label class="field"><span>Village</span><input class="input" id="village" placeholder="e.g. Ha Lejone" value="Ha Ralefatla"></label>
+          </div>
+          <div class="field"><span>Why screened</span><div class="checks" id="risks"></div></div>
+          <div class="field"><span>Symptoms today</span><div class="checks" id="symptoms"></div></div>
+          <label class="check" style="width:max-content"><input type="checkbox" id="consent" checked> Consent given (see protocol S02)</label>
+        </div>
+
+        <div class="step">
+          <div class="step-h"><span class="step-n">2</span><h2 class="grow">Chest X-ray and AI reading</h2><span class="sim">Simulated score</span></div>
+          <div class="xray">
+            <label class="xray-img" for="xfile" id="xprev">Tap to add the X-ray image (optional, stays on this device)</label>
+            <div class="stack" style="gap:10px">
+              <input type="file" id="xfile" accept="image/*" class="sr">
+              <button class="btn primary" type="button" id="readBtn">Read X-ray</button>
+              <div>
+                <div class="gauge" aria-hidden="true"><div class="thr" id="thrMark"></div><div class="needle" id="needle" style="left:0%"></div></div>
+                <div class="gauge-scale"><span>0</span><span id="thrLabel">threshold 50</span><span>100</span></div>
+              </div>
+              <div id="result" class="small muted">No reading yet. In the pilot, the CAD software scores the X-ray in under a minute, offline.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-h"><span class="step-n">3</span><h2 class="grow">Next step and save</h2></div>
+          <label class="check" style="width:max-content"><input type="checkbox" id="sputum"> Sputum collected for GeneXpert today</label>
+          <div class="row">
+            <label class="inline-field"><span>Explain in</span><select class="input" id="explLang"><option value="Sesotho">Sesotho</option><option value="English">English</option></select></label>
+            <button class="btn" type="button" id="explainBtn"></button>
+          </div>
+          <div class="ai-out" id="explainOut"></div>
+          <div class="row"><button class="btn primary" type="submit" id="saveBtn">Save record</button><span class="small muted" id="saveNote"></span></div>
+        </div>
+      </form>
+
+      <div class="stack">
+        <div class="card">
+          <div class="card-h"><h2>Today at this site</h2><p id="todayCount"></p></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Code</th><th>Age</th><th class="n">Score</th><th>Next step</th></tr></thead>
+            <tbody id="today"></tbody>
+          </table></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h2>Ask the protocol</h2><p>Claude answers from the screening protocol only</p></div>
+          <div class="chat" id="sopChat" aria-live="polite"></div>
+          <form class="composer" id="sopForm" style="border:0;padding:8px 0 0;background:transparent">
+            <label class="sr" for="sopIn">Question</label>
+            <textarea id="sopIn" rows="1" placeholder="e.g. Can I X-ray a pregnant woman?"></textarea>
+            <button class="round" type="submit" id="sopSend" aria-label="Ask"></button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRAMME -->
+  <section class="view" data-view="programme" aria-label="Programme dashboard" hidden>
+    <div class="stack">
+      <div class="row">
+        <h2 class="grow">National TB Programme · pilot districts</h2>
+        <label class="inline-field"><span>District</span><select class="input" id="pDistrict"><option value="all">Both districts</option><option>Thaba-Tseka</option><option>Mokhotlong</option></select></label>
+      </div>
+      <p class="small muted" id="dbStatus"></p>
+      <div class="kpis" id="kpis"></div>
+      <div class="split even">
+        <div class="card">
+          <div class="card-h"><h2>Care cascade</h2><p>Where people drop out between screening and treatment</p></div>
+          <div class="cascade" id="cascade"></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h2>Ask the data</h2><p>Claude looks up the records to answer</p></div>
+          <div class="row"><input class="input grow" id="askIn" placeholder="Which site has the most people waiting for results?"><button class="btn primary" id="askBtn" type="button">Ask</button></div>
+          <div class="ai-out" id="askOut" style="margin-top:10px"></div>
+          <div class="row small" style="margin-top:8px" id="askEx"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h2>Needs follow-up</h2><p id="fuCount"></p></div>
+        <div class="list" id="followups"></div>
+      </div>
+      <div class="split even">
+        <div class="card">
+          <div class="card-h"><h2>By screening site</h2></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Site</th><th class="n">Screened</th><th class="n">Above threshold</th><th class="n">Tested</th><th class="n">Confirmed</th><th class="n">On treatment</th></tr></thead>
+            <tbody id="sites"></tbody>
+          </table></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h2>Set the CAD threshold</h2><p>From calibration records, where everyone was tested</p></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th class="n">Threshold</th><th class="n">Sent for test</th><th class="n">TB cases caught</th><th class="n">Missed</th></tr></thead>
+            <tbody id="calib"></tbody>
+          </table></div>
+          <div class="row" style="margin-top:10px">
+            <label class="inline-field"><span>Threshold in use</span><select class="input" id="thrSel"></select></label>
+            <button class="btn" type="button" id="thrSave">Apply</button>
+            <span class="small muted" id="calibNote"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROTOCOL -->
+  <section class="view" data-view="protocol" aria-label="Protocol" hidden>
+    <div class="stack">
+      <div class="card"><h2>Screening protocol (sample)</h2>
+        <p class="muted" style="margin-top:6px;max-width:70ch">The pilot will load the National TB Programme's own standard operating procedures. These passages were written for the prototype only.</p></div>
+      <div class="list" id="sopList"></div>
+    </div>
+  </section>
+
+  <p class="footer">Highland TB Screen is a prototype for a proposal to the Ministry of Health. It is not a medical device and not an official government service.</p>
+</main>
+
+<script>
+window.APP = { caps: ["sample", "db", "user"] };
+
+</script>
+<script>
+"use strict";
+/* ---------- tiny DOM helpers ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+function h(tag, attrs, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v == null || v === false) continue;
+    if (k === "class") e.className = v;
+    else if (k === "text") e.textContent = v;
+    else if (k.startsWith("on") && typeof v === "function") e.addEventListener(k.slice(2), v);
+    else if (k === "style") e.style.cssText = v;
+    else e.setAttribute(k, v === true ? "" : String(v));
+  }
+  for (const c of kids.flat(3)) if (c != null && c !== false) e.append(c.nodeType ? c : String(c));
+  return e;
+}
+const ICONS = {
+  send: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>',
+  mic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+  speaker: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>',
+  phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>',
+  hang: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 14c5-5 13-5 18 0l-2.5 2.5-3.5-1.5v-3a10 10 0 0 0-6 0v3L5.5 16.5z"/></svg>',
+  spark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></svg>',
+  copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>',
+};
+function icon(name) { const t = document.createElement("template"); t.innerHTML = ICONS[name]; return t.content.firstChild; }
+
+/* ---------- time & format ---------- */
+const DAY = 864e5;
+function relTime(iso) {
+  const t = Date.parse(iso); if (!t) return "";
+  const m = Math.round((Date.now() - t) / 6e4);
+  if (m < 1) return "just now";
+  if (m < 60) return m + " min ago";
+  const hh = Math.round(m / 60); if (hh < 24) return hh + " h ago";
+  const d = Math.round(hh / 24); return d === 1 ? "yesterday" : d + " days ago";
+}
+function fmtDate(iso, withYear) {
+  const t = new Date(iso); if (isNaN(t)) return "";
+  return t.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: withYear ? "numeric" : undefined });
+}
+function fmtTime(d = new Date()) { return d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }); }
+const pct = (a, b) => (b ? Math.round((a / b) * 100) : 0);
+function countBy(arr, fn) { const m = new Map(); for (const x of arr) { const k = fn(x); if (k == null) continue; m.set(k, (m.get(k) || 0) + 1); } return [...m.entries()].sort((a, b) => b[1] - a[1]); }
+
+/* ---------- toast ---------- */
+let toastTimer;
+function toast(msg) {
+  let t = $(".toast");
+  if (!t) { t = h("div", { class: "toast", role: "status" }); document.body.append(t); }
+  t.textContent = msg; t.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 3800);
+}
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); toast("Copied"); }
+  catch { toast("Copy isn't allowed here. Select the text and copy it."); }
+}
+
+/* ---------- hash views ---------- */
+function startRouter(defaultView) {
+  const views = $$("[data-view]"), tabs = $$("[data-tab]");
+  const show = () => {
+    const want = (location.hash || "").slice(1);
+    const v = views.some((x) => x.dataset.view === want) ? want : defaultView;
+    views.forEach((x) => { x.hidden = x.dataset.view !== v; });
+    tabs.forEach((t) => t.setAttribute("aria-current", t.dataset.tab === v ? "page" : "false"));
+    document.dispatchEvent(new CustomEvent("viewchange", { detail: v }));
+  };
+  window.addEventListener("hashchange", show); show();
+}
+
+/* ---------- Claude runtime capabilities ---------- */
+const CAP = { sample: null, db: null, user: null, dictation: null, tts: null, canWrite: null, uid: null };
+const capReady = (async () => {
+  const names = (window.APP && APP.caps) || [];
+  if (!window.claude || typeof window.claude.use !== "function") { setAiPill(); return CAP; }
+  await Promise.all(names.map(async (n) => { try { CAP[n] = await window.claude.use(n); } catch { CAP[n] = null; } }));
+  if (CAP.user) {
+    try { CAP.canWrite = await CAP.user.can("data.write"); } catch { CAP.canWrite = null; }
+    try { CAP.uid = await CAP.user.id(); } catch { CAP.uid = null; }
+  }
+  setAiPill(); return CAP;
+})();
+function setAiPill() {
+  const p = $("#aiPill"); if (!p) return;
+  const on = !!CAP.sample;
+  p.dataset.state = on ? "on" : "off";
+  p.lastChild.textContent = on ? "Claude connected" : "Claude unavailable here";
+}
+function aiErrorCopy(e) {
+  switch (e && e.code) {
+    case "cancelled": return "";
+    case "not_granted": return "Claude is switched off for this page. Allow it in the page's permissions to get AI answers.";
+    case "sampling_disabled": return "Claude isn't available on this account.";
+    case "rate_limited": return "Too many requests just now. Wait a minute, then try again.";
+    case "session_expired": return "Your Claude session has expired. Sign in again.";
+    case "refused": return "Claude declined that request. Try asking it another way.";
+    case "invalid_json": return "The answer came back in an unexpected format. Try again.";
+    case "no_ai": return "Claude can't be reached from this view. Open the page on claude.ai while signed in.";
+    case "images_unavailable": return "Image reading isn't available in this view.";
+    case "image_rejected": return "That image couldn't be read. Try a JPG or PNG under 20 MB.";
+    default: return "Claude couldn't answer just now. Try again.";
+  }
+}
+/** Ask Claude. Streams plain text through onText; returns {text}. */
+async function askClaude(input, opts = {}) {
+  if (!CAP.sample) throw { code: "no_ai" };
+  const o = { cache: false, modelTier: opts.tier || "quick" };
+  if (opts.onText) o.onText = opts.onText;
+  if (opts.signal) o.signal = opts.signal;
+  if (opts.images) o.images = opts.images;
+  if (opts.tools) { o.tools = opts.tools; delete o.cache; }
+  return CAP.sample(input, o);
+}
+async function askClaudeJSON(input, opts = {}) {
+  if (!CAP.sample) throw { code: "no_ai" };
+  const o = { cache: false, modelTier: opts.tier || "quick" };
+  if (opts.images) o.images = opts.images;
+  if (opts.signal) o.signal = opts.signal;
+  return CAP.sample.json(input, o);
+}
+/** Split a streamed reply of the form "<answer text>\n@@META@@\n{json}". */
+function splitMeta(text) {
+  const i = text.indexOf("@@META@@");
+  if (i < 0) return { body: text.trim(), meta: null };
+  let meta = null;
+  const raw = text.slice(i + 8);
+  const a = raw.indexOf("{"), b = raw.lastIndexOf("}");
+  if (a >= 0 && b > a) { try { meta = JSON.parse(raw.slice(a, b + 1)); } catch { meta = null; } }
+  return { body: text.slice(0, i).trim(), meta };
+}
+
+/* ---------- shared data (db) ---------- */
+function watchCollection(coll, cb, { order, dir = "desc", limit, statusEl } = {}) {
+  if (!CAP.db) { if (statusEl) statusEl.textContent = "Shared data isn't available in this view."; cb([]); return () => {}; }
+  let q = CAP.db.collection(coll);
+  if (order) q = q.orderBy(order, dir);
+  if (limit) q = q.limit(limit);
+  const timer = setTimeout(() => { if (statusEl) statusEl.textContent = "Still connecting to shared data…"; }, 10000);
+  return q.onSnapshot((s) => {
+    if (!s.metadata.fromCache) { clearTimeout(timer); if (statusEl) statusEl.textContent = ""; }
+    cb(s.docs.map((d) => Object.assign({ _id: d.id }, d.data())));
+  }, () => { clearTimeout(timer); if (statusEl) statusEl.textContent = "Shared data couldn't be loaded in this view."; });
+}
+async function dbAdd(coll, data) {
+  if (!CAP.db) throw { code: "no_db" };
+  return CAP.db.collection(coll).add(data);
+}
+async function dbSet(coll, id, data) { if (!CAP.db) throw { code: "no_db" }; return CAP.db.collection(coll).doc(id).set(data); }
+async function dbUpdate(coll, id, data) { if (!CAP.db) throw { code: "no_db" }; return CAP.db.collection(coll).doc(id).update(data); }
+function dbErrorCopy(e) {
+  if (e && e.code === "no_db") return "Saving needs the page opened on claude.ai.";
+  if (e && e.code === "invalid_argument") return "You can view this prototype but not save to it. Ask the owner for Contributor access.";
+  if (e && e.code === "quota_exceeded") return "The demo database is full. Ask the owner to clear old records.";
+  return "That couldn't be saved. Try again.";
+}
+
+/* ---------- voice: dictation in, Claude voice out ---------- */
+const VOICE = { target: null, live: false, ready: false, buttons: new Set() };
+function setupDictation() {
+  const d = CAP.dictation;
+  if (!d || VOICE.ready) return !!d;
+  VOICE.ready = true;
+  d.onPartial(({ text }) => VOICE.target && VOICE.target.partial && VOICE.target.partial(text));
+  d.onFinal(({ text }) => VOICE.target && VOICE.target.final && VOICE.target.final(text));
+  d.onState(({ state, reason }) => {
+    VOICE.live = state === "listening" || state === "starting";
+    VOICE.buttons.forEach((b) => { b.dataset.live = String(VOICE.live && VOICE.target && VOICE.target.btn === b); });
+    if (state === "idle" && VOICE.target && VOICE.target.done) VOICE.target.done(reason);
+  });
+  return true;
+}
+/** Wire a mic button. target = {partial(text), final(text), done(reason), lang()} */
+function wireMic(btn, target) {
+  if (!CAP.dictation) { btn.hidden = true; return; }
+  setupDictation(); VOICE.buttons.add(btn); btn.hidden = false;
+  btn.addEventListener("click", () => {
+    const d = CAP.dictation;
+    if (VOICE.live) { d.stop().catch(() => {}); return; }
+    VOICE.target = Object.assign({ btn }, target);
+    const lang = target.lang ? target.lang() : "";
+    d.start(lang ? { language: lang } : undefined).catch((e) => {
+      if (e && e.code === "not_granted") { btn.hidden = true; toast("Microphone use was declined. You can type instead."); }
+      else if (e && e.code === "unavailable" && lang && lang !== "en") toast("Speech input in this language isn't offered in this browser yet. Switch to English or type.");
+      else if (e && e.code !== "stopped" && e.code !== "dismissed") toast("Speech input isn't available here. Type instead.");
+    });
+  });
+}
+async function speakText(text, lang) {
+  if (!CAP.tts) { toast("Reading aloud isn't available in this browser."); return; }
+  try { await CAP.tts.speak(String(text).slice(0, 1900), lang ? { language: lang } : undefined); }
+  catch (e) {
+    if (e && (e.code === "stopped" || e.code === "replaced")) return;
+    toast(e && e.code === "not_granted" ? "Reading aloud is switched off for this page." : "Couldn't read that aloud.");
+  }
+}
+
+/* ---------- small renderers ---------- */
+function renderBars(el, rows, { hiKey } = {}) {
+  el.replaceChildren();
+  if (!rows.length) { el.append(h("div", { class: "empty", text: "No data yet." })); return; }
+  const max = Math.max(...rows.map((r) => r[1]), 1);
+  for (const [label, v] of rows) {
+    el.append(h("div", { class: "bar-row" + (label === hiKey ? " hi" : "") },
+      h("span", { text: label }),
+      h("div", { class: "bar-track" }, h("div", { class: "bar-fill", style: "width:" + Math.max(2, (v / max) * 100) + "%" })),
+      h("span", { class: "bar-v", text: String(v) })));
+  }
+}
+function kpi(label, value, sub, tone) {
+  return h("div", { class: "kpi", "data-tone": tone || null },
+    h("div", { class: "v", text: String(value) }), h("div", { class: "l", text: label }), sub ? h("div", { class: "s", text: sub }) : null);
+}
+function phoneClock() { const el = $$(".phone-status .clock"); el.forEach((e) => { e.textContent = fmtTime(); }); }
+setInterval(phoneClock, 30000);
+document.addEventListener("DOMContentLoaded", phoneClock);
+const DISTRICTS = ["Berea", "Butha-Buthe", "Leribe", "Mafeteng", "Maseru", "Mohale's Hoek", "Mokhotlong", "Qacha's Nek", "Quthing", "Thaba-Tseka"];
+
+/* ================= Highland TB Screen ================= */
+const SITES = [
+  { id: "TT-1", name: "Thaba-Tseka site 1", district: "Thaba-Tseka" },
+  { id: "TT-2", name: "Thaba-Tseka site 2", district: "Thaba-Tseka" },
+  { id: "TT-3", name: "Thaba-Tseka site 3", district: "Thaba-Tseka" },
+  { id: "MK-1", name: "Mokhotlong site 1", district: "Mokhotlong" },
+  { id: "MK-2", name: "Mokhotlong site 2", district: "Mokhotlong" },
+  { id: "MK-3", name: "Mokhotlong site 3", district: "Mokhotlong" },
+];
+const RISKS = ["Household contact", "Living with HIV", "Current or former miner", "Has symptoms", "Other"];
+const SYMPTOMS = ["Cough 2+ weeks", "Fever", "Night sweats", "Weight loss"];
+/* Sample protocol, written for the prototype. The pilot loads the National TB Programme's SOPs. */
+const SOP = [
+  { id: "S01", title: "Who to screen", text: "Screen adults aged 15 and over in priority groups: household contacts of people with TB, people living with HIV, current and former mineworkers, and anyone with cough for 2 weeks or more, fever, night sweats or weight loss. Children under 15 follow the usual clinical pathway, because AI X-ray reading is not recommended for them. Pregnant women: ask the clinician before an X-ray and always use the lead apron." },
+  { id: "S02", title: "Consent", text: "Before the X-ray, explain in Sesotho or English: what the X-ray is for, that it is voluntary, that a result is ready the same visit, and that the record uses a code, not a name. Record consent. A person may stop at any time." },
+  { id: "S03", title: "Radiation safety", text: "Only trained and licensed operators use the X-ray unit. Everyone else stands at least 2 metres away and outside the beam. Use the lead apron for the person when the protocol asks for it. Log every exposure in the unit's register." },
+  { id: "S04", title: "Reading the AI score", text: "The AI software gives a score from 0 to 100. At or above the threshold: collect sputum the same day for a GeneXpert test. Below the threshold and no symptoms: no further TB test today; advise the person to come back if a cough lasts 2 weeks. Below the threshold with symptoms: refer to the clinician as usual. The AI score never diagnoses TB on its own." },
+  { id: "S05", title: "Collecting sputum", text: "Collect in the open air or a well-ventilated space, away from other people. Ask for a deep cough from the chest, not saliva. Label the container with the person's code. Keep it cool and send it with the sample courier the same day or the next morning." },
+  { id: "S06", title: "Results and starting treatment", text: "Lab results should be entered within 3 days of collection. When TB is confirmed, the person should start treatment as soon as possible and within 14 days of screening. The village health worker helps the person reach the clinic." },
+  { id: "S07", title: "Messages to village health workers", text: "SMS messages never include a diagnosis, a test result or a name. Use the person's code, village and screening site, and ask the village health worker to help the person come to the clinic." },
+  { id: "S08", title: "Setting the threshold", text: "The National TB Programme sets the threshold during calibration: the first people screened are all tested, whatever their score, so the programme can see how many cases each threshold would catch and how many tests it would need." },
+  { id: "S09", title: "Equipment care", text: "Charge batteries every night. Take a daily quality-check image before the first person. Clean the detector with the approved wipes. Report damage at once; a spare unit can rotate between sites." },
+  { id: "S10", title: "Data protection", text: "Records hold a code, age, sex, village and results, never a name or ID number. Data is stored in Lesotho and seen only by staff who need it for care." },
+];
+const state = { records: [], threshold: 50, current: null, sopTurns: [], warned: false };
+const siteOf = (id) => SITES.find((s) => s.id === id) || { id, name: id, district: "" };
+const daysSince = (iso) => Math.floor((Date.now() - Date.parse(iso)) / DAY);
+const tested = (r) => r.xpert === "detected" || r.xpert === "not_detected";
+
+/* ---------- station ---------- */
+function newCode() {
+  const s = $("#site").value.replace("-", "");
+  return s + "-" + String(Math.floor(1000 + Math.random() * 9000));
+}
+function checked(box) { return $$("input:checked", box).map((i) => i.value); }
+function resetForm() {
+  state.current = { code: newCode(), score: null };
+  $("#pCode").textContent = state.current.code;
+  $("#needle").style.left = "0%"; $("#needle").style.opacity = ".25";
+  $("#result").className = "small muted";
+  $("#result").textContent = "No reading yet. In the pilot, the CAD software scores the X-ray in under a minute, offline.";
+  $("#sputum").checked = false; $("#explainOut").textContent = ""; $("#saveNote").textContent = "";
+  $("#xprev").replaceChildren("Tap to add the X-ray image (optional, stays on this device)");
+  $("#readBtn").textContent = "Read X-ray";
+}
+function setThreshold(t) {
+  state.threshold = t;
+  $("#thrMark").style.left = t + "%"; $("#thrLabel").textContent = "threshold " + t;
+  if (state.current && state.current.score != null) showResult();
+  const sel = $("#thrSel"); if (sel) sel.value = String(t);
+}
+function simulateScore() {
+  const ns = checked($("#symptoms")).length;
+  const hi = checked($("#risks")).some((r) => r !== "Other");
+  const exp = Math.max(0.55, 2.5 - 0.4 * ns - (hi ? 0.35 : 0));
+  return Math.round(100 * Math.pow(Math.random(), exp));
+}
+function showResult() {
+  const s = state.current.score, pos = s >= state.threshold, sym = checked($("#symptoms")).length > 0;
+  $("#needle").style.left = s + "%"; $("#needle").style.opacity = "1";
+  const r = $("#result"); r.className = "result " + (pos ? "pos" : "neg"); r.replaceChildren();
+  r.append(h("b", { text: `Score ${s} · ${pos ? "at or above" : "below"} threshold ${state.threshold}. ` }),
+    pos ? "Collect sputum today for GeneXpert (protocol S04)." : sym ? "Has symptoms: refer to the clinician as usual (S04)." : "No further TB test today.");
+  $("#sputum").checked = pos;
+}
+function readXray() {
+  if (!$("#consent").checked) { toast("Record consent before the X-ray."); return; }
+  const btn = $("#readBtn"); btn.disabled = true; btn.textContent = "Reading…";
+  setTimeout(() => { state.current.score = simulateScore(); showResult(); btn.disabled = false; btn.textContent = "Read again"; }, 900);
+}
+async function explain() {
+  const c = state.current;
+  if (!c || c.score == null) { toast("Read the X-ray first."); return; }
+  const btn = $("#explainBtn"), out = $("#explainOut");
+  btn.disabled = true; out.textContent = "Claude is writing…";
+  const pos = c.score >= state.threshold, sym = checked($("#symptoms"));
+  try {
+    const r = await askClaude([
+      "You help a TB screening nurse in rural Lesotho explain a chest X-ray screening result to the person who was screened.",
+      `Write in ${$("#explLang").value}. At most 70 words. Warm, simple, spoken to the person ("you"). Plain text only.`,
+      "Rules: the AI reading is a screening step and is NOT a diagnosis. Do not mention the numeric score. Do not say the person has TB. Do not promise anything about cost.",
+      `Facts: age ${$("#age").value}; symptoms today: ${sym.join(", ") || "none"}; X-ray reading ${pos ? "shows signs that need a lab test of sputum" : "shows no signs that need a lab test"}; sputum ${$("#sputum").checked ? "collected today, result in a few days; the village health worker may visit" : "not collected"}.`,
+      pos ? "" : sym.length ? "Because they have symptoms, the clinician will still check them today." : "Tell them to come back if a cough lasts 2 weeks or more.",
+    ].join("\n"), { tier: "quick", onText: ({ text }) => { out.textContent = text; } });
+    out.textContent = r.text.trim();
+  } catch (e) { out.textContent = e.text || ""; toast(aiErrorCopy(e)); }
+  finally { btn.disabled = false; }
+}
+async function saveRecord(e) {
+  e.preventDefault();
+  const c = state.current;
+  if (c.score == null) { toast("Read the X-ray before saving."); return; }
+  const age = parseInt($("#age").value, 10);
+  if (!(age >= 15)) { toast("This pilot screens people aged 15 and over (S01)."); return; }
+  const site = siteOf($("#site").value), pos = c.score >= state.threshold, sp = $("#sputum").checked;
+  const doc = {
+    code: c.code, site: site.id, district: site.district, age, sex: $("#sex").value, village: $("#village").value.trim().slice(0, 60),
+    risks: checked($("#risks")), symptoms: checked($("#symptoms")), consent: true,
+    cadScore: c.score, threshold: state.threshold, cadPositive: pos, sputum: pos && sp,
+    xpert: pos && sp ? "pending" : "", resultAt: "", txStart: "", screenedAt: new Date().toISOString(), calibration: false, demo: false,
+  };
+  $("#saveBtn").disabled = true;
+  try { await dbSet("screenings", c.code, doc); toast("Saved " + c.code); resetForm(); }
+  catch (err) { toast(dbErrorCopy(err)); }
+  finally { $("#saveBtn").disabled = false; }
+}
+function renderToday() {
+  const site = $("#site").value, today = new Date().toDateString();
+  const rows = state.records.filter((r) => r.site === site && new Date(r.screenedAt).toDateString() === today);
+  const tb = $("#today"); tb.replaceChildren();
+  $("#todayCount").textContent = rows.length + " screened";
+  if (!rows.length) { tb.append(h("tr", null, h("td", { colspan: 4, class: "muted", text: "No one screened here yet today. Saved records appear here." }))); return; }
+  rows.forEach((r) => tb.append(h("tr", null, h("td", { class: "mono", text: r.code }), h("td", { text: r.age + " " + (r.sex || "")[0] }),
+    h("td", { class: "n", text: String(r.cadScore) }),
+    h("td", null, r.cadPositive ? h("span", { class: "pill crit", text: r.sputum ? "Sputum sent" : "Collect sputum" }) : h("span", { class: "pill good", text: "No test needed" })))));
+}
+
+/* ---------- protocol chat ---------- */
+function sopBubble(cls, text) { const b = h("div", { class: "bubble " + cls }, h("span", { class: "body", text })); $("#sopChat").append(b); $("#sopChat").scrollTop = $("#sopChat").scrollHeight; return b; }
+async function askSop(q) {
+  q = q.trim(); if (!q) return; $("#sopIn").value = "";
+  sopBubble("me", q); const b = sopBubble("bot", "Checking the protocol…"); const body = b.querySelector(".body");
+  try {
+    const r = await askClaude([
+      "You answer questions from a TB screening team in rural Lesotho, using ONLY the protocol passages below.",
+      "If the protocol does not cover it, say so and suggest asking the district TB coordinator. At most 90 words, plain text. End with the passage ids used, like (Protocol S04).",
+      "", SOP.map((p) => `[${p.id}] ${p.title}: ${p.text}`).join("\n"), "",
+      state.sopTurns.slice(-4).map((t) => (t.role === "user" ? "Team: " : "Assistant: ") + t.content).join("\n"),
+      "Question: " + q,
+    ].join("\n"), { tier: "quick", onText: ({ text }) => { body.textContent = text; } });
+    body.textContent = r.text.trim();
+    state.sopTurns.push({ role: "user", content: q }, { role: "assistant", content: r.text.trim() });
+  } catch (e) { body.textContent = e.text || aiErrorCopy(e); }
+}
+
+/* ---------- programme dashboard ---------- */
+function scoped() { const d = $("#pDistrict").value; return state.records.filter((r) => d === "all" || r.district === d); }
+function stats(rs) {
+  const pos = rs.filter((r) => r.cadPositive), need = rs.filter((r) => r.cadPositive || r.calibration);
+  const col = need.filter((r) => r.sputum || tested(r));
+  const res = rs.filter(tested), det = rs.filter((r) => r.xpert === "detected"), tx = det.filter((r) => r.txStart);
+  const tx14 = tx.filter((r) => (Date.parse(r.txStart) - Date.parse(r.screenedAt)) / DAY <= 14);
+  const pending = rs.filter((r) => r.xpert === "pending");
+  return { n: rs.length, pos: pos.length, need: need.length, calOnly: need.length - pos.length, col: col.length, res: res.length, det: det.length, tx: tx.length, tx14: tx14.length, pending: pending.length };
+}
+function followups(rs) {
+  const out = [];
+  for (const r of rs) {
+    if (r.cadPositive && !r.sputum && !tested(r)) out.push({ r, kind: "not_collected", label: "Sputum not collected", days: daysSince(r.screenedAt) });
+    else if (r.xpert === "pending" && daysSince(r.screenedAt) > 3) out.push({ r, kind: "result_overdue", label: "Result overdue", days: daysSince(r.screenedAt) });
+    else if (r.xpert === "detected" && !r.txStart) out.push({ r, kind: "not_on_treatment", label: "Not on treatment yet", days: daysSince(r.screenedAt) });
+  }
+  const rank = { not_on_treatment: 0, result_overdue: 1, not_collected: 2 };
+  return out.sort((a, b) => rank[a.kind] - rank[b.kind] || b.days - a.days);
+}
+function renderProgramme() {
+  const rs = scoped(), s = stats(rs);
+  $("#kpis").replaceChildren(
+    kpi("People screened", s.n, rs.filter((r) => r.demo).length === rs.length && s.n ? "synthetic examples" : "in the pilot"),
+    kpi("Above threshold", s.pos, pct(s.pos, s.n) + "% of screened"),
+    kpi("Waiting for results", s.pending, "samples at the lab", s.pending > 6 ? "warn" : null),
+    kpi("TB confirmed", s.det, pct(s.det, s.res) + "% of results"),
+    kpi("Treated within 14 days", pct(s.tx14, s.det) + "%", s.tx14 + " of " + s.det + " · target 90%", s.det && pct(s.tx14, s.det) < 90 ? "crit" : null));
+
+  const steps = [["Needs a test", s.need, s.calOnly ? "incl. " + s.calOnly + " calibration tests" : ""], ["Sputum collected", s.col, s.need - s.col ? (s.need - s.col) + " not collected" : ""],
+    ["Result received", s.res, s.col - s.res ? (s.col - s.res) + " waiting" : ""], ["TB confirmed", s.det, pct(s.det, s.res) + "% of results positive"],
+    ["Started treatment", s.tx, s.det - s.tx ? (s.det - s.tx) + " not started" : ""]];
+  const cas = $("#cascade"); cas.replaceChildren(h("p", { class: "small muted", text: `${s.n} people screened. ${s.pos} (${pct(s.pos, s.n)}%) scored at or above the threshold.` + (s.calOnly ? ` During calibration, ${s.calOnly} more were tested whatever their score.` : "") }));
+  const top = Math.max(s.need, 1);
+  steps.forEach(([label, v, note], i) => cas.append(h("div", { class: "cas-row" },
+    h("div", null, h("div", { text: label }), note ? h("div", { class: "drop" + (i !== 0 && i !== 3 ? " bad" : ""), text: note }) : null),
+    h("div", { class: "cas-track" }, h("div", { class: "cas-fill", style: "width:" + Math.max(1.5, (v / top) * 100) + "%" })),
+    h("div", { class: "cas-n", text: String(v) }))));
+
+  const fu = followups(rs), list = $("#followups"); list.replaceChildren();
+  $("#fuCount").textContent = fu.length ? fu.length + " people" : "";
+  if (!fu.length) list.append(h("div", { class: "empty", text: "No one is overdue. People who miss a step appear here." }));
+  fu.slice(0, 10).forEach((f) => list.append(fuItem(f)));
+
+  const tb = $("#sites"); tb.replaceChildren();
+  SITES.filter((x) => $("#pDistrict").value === "all" || x.district === $("#pDistrict").value).forEach((site) => {
+    const ss = stats(rs.filter((r) => r.site === site.id));
+    tb.append(h("tr", null, h("td", { text: site.name }), ...[ss.n, ss.pos, ss.res, ss.det, ss.tx].map((v) => h("td", { class: "n", text: String(v) }))));
+  });
+  renderCalibration();
+}
+function fuItem(f) {
+  const r = f.r, site = siteOf(r.site);
+  const out = h("div", { class: "small" }), actions = h("div", { class: "row" });
+  const tone = f.kind === "not_on_treatment" ? "crit" : "warn";
+  const upd = async (data, msg) => { try { await dbUpdate("screenings", r._id, data); toast(msg); } catch (e) { toast(dbErrorCopy(e)); } };
+  if (f.kind === "not_collected") actions.append(h("button", { class: "btn sm", type: "button", text: "Mark sample collected", onclick: () => upd({ sputum: true, xpert: "pending" }, "Marked as collected") }));
+  if (f.kind === "result_overdue") actions.append(
+    h("button", { class: "btn sm", type: "button", text: "Result: TB detected", onclick: () => upd({ xpert: "detected", resultAt: new Date().toISOString() }, "Result recorded") }),
+    h("button", { class: "btn sm", type: "button", text: "Result: not detected", onclick: () => upd({ xpert: "not_detected", resultAt: new Date().toISOString() }, "Result recorded") }));
+  if (f.kind === "not_on_treatment") actions.append(h("button", { class: "btn sm", type: "button", text: "Mark treatment started", onclick: () => upd({ txStart: new Date().toISOString() }, "Treatment start recorded") }));
+  const sms = h("button", { class: "btn sm", type: "button" }, icon("spark"), "Draft SMS to health worker");
+  sms.onclick = async () => {
+    sms.disabled = true; out.replaceChildren(h("div", { class: "ai-out", text: "Claude is drafting…" }));
+    const box = out.firstChild;
+    try {
+      const res = await askClaude([
+        "Draft one SMS from the district TB team to a village health worker in rural Lesotho.",
+        "Write it in Sesotho, then the same message in English on a new line starting 'EN:'.",
+        "Strict privacy rules: never include a diagnosis, a test result, the word TB, or a name. Use only the person's code, village and screening site. Ask the health worker to help the person come to the clinic this week.",
+        "Each language at most 160 characters. Return only the SMS text.",
+        `Person code: ${r.code}. Village: ${r.village || "not recorded"}. Screening site: ${site.name}. Reason (do not mention): ${f.label}.`,
+      ].join("\n"), { tier: "quick", onText: ({ text }) => { box.textContent = text; } });
+      box.textContent = res.text.trim();
+      out.append(h("div", { class: "row", style: "margin-top:6px" }, h("button", { class: "btn sm", type: "button", onclick: () => copyText(box.textContent) }, icon("copy"), "Copy"), h("span", { class: "muted", text: "No SMS is sent from this demo." })));
+    } catch (e) { box.textContent = e.text || aiErrorCopy(e); }
+    finally { sms.disabled = false; }
+  };
+  actions.append(sms);
+  if (CAP.canWrite === false) $$("button", actions).forEach((b) => { if (b !== sms) b.disabled = true; });
+  return h("div", { class: "item" },
+    h("div", { class: "item-h" }, h("span", { class: "pill " + tone, text: f.label }), h("span", { class: "mono", text: r.code }),
+      h("span", { text: site.name }), h("span", { text: "· " + (r.village || "village not recorded") }), h("span", { text: "· screened " + f.days + " days ago" }), r.demo ? h("span", { class: "pill", text: "synthetic" }) : null),
+    actions, out);
+}
+function renderCalibration() {
+  const cal = state.records.filter((r) => r.calibration && tested(r));
+  const det = cal.filter((r) => r.xpert === "detected").length;
+  const tb = $("#calib"); tb.replaceChildren();
+  $("#calibNote").textContent = cal.length ? `From ${cal.length} calibration records, ${det} with TB` : "No calibration records yet.";
+  [30, 40, 50, 60, 70].forEach((t) => {
+    const sent = cal.filter((r) => r.cadScore >= t).length, caught = cal.filter((r) => r.xpert === "detected" && r.cadScore >= t).length;
+    tb.append(h("tr", { class: t === state.threshold ? "cur" : null },
+      h("td", { class: "n", text: String(t) }), h("td", { class: "n", text: `${sent} (${pct(sent, cal.length)}%)` }),
+      h("td", { class: "n", text: `${caught} of ${det}` }), h("td", { class: "n", text: String(det - caught) })));
+  });
+}
+
+/* ---------- ask the data (Claude with page tools) ---------- */
+function overview(district) {
+  const rs = state.records.filter((r) => !district || district === "all" || r.district === district);
+  const s = stats(rs);
+  return { district: district || "both", screened: s.n, above_threshold: s.pos, needed_a_test_incl_calibration: s.need, sputum_collected: s.col, results_received: s.res, waiting_for_results: s.pending, tb_confirmed: s.det, started_treatment: s.tx, treated_within_14_days: s.tx14, threshold_in_use: state.threshold, data_is_synthetic: rs.every((r) => r.demo) };
+}
+function siteTable() { return SITES.map((site) => Object.assign({ site: site.name, district: site.district }, (({ n, pos, pending, res, det, tx }) => ({ screened: n, above_threshold: pos, waiting_for_results: pending, results: res, confirmed: det, on_treatment: tx }))(stats(state.records.filter((r) => r.site === site.id))))); }
+function fuTable(kind) { return followups(state.records).filter((f) => !kind || f.kind === kind).slice(0, 40).map((f) => ({ code: f.r.code, site: siteOf(f.r.site).name, village: f.r.village, issue: f.label, days_since_screening: f.days })); }
+async function askData(q) {
+  q = (q || "").trim(); if (!q) return;
+  const out = $("#askOut"), btn = $("#askBtn"); btn.disabled = true; out.textContent = "Claude is looking at the records…";
+  const intro = "You are the data assistant on the National TB Programme's pilot dashboard in Lesotho (two districts: Thaba-Tseka and Mokhotlong). Answer the manager's question in at most 120 words, with numbers. Plain text, no markdown tables. The records are synthetic demo data; say so if asked about real patients. Never invent figures.";
+  try {
+    const lim = await CAP.sample.limits().catch(() => null);
+    let r;
+    if (lim && lim.tools) {
+      r = await askClaude(intro + "\nUse the tools to look up what you need.\n\nQuestion: " + q, {
+        tier: "quick", onText: ({ text }) => { out.textContent = text; },
+        tools: [
+          { name: "get_overview", description: "Totals for the screening-to-treatment cascade. Returns counts. Optional district: Thaba-Tseka, Mokhotlong or all.", inputSchema: { type: "object", properties: { district: { type: "string" } } }, execute: (i) => overview(String(i.district || "all")) },
+          { name: "get_sites", description: "Per-site counts: screened, above threshold, waiting for results, results, confirmed, on treatment.", execute: () => siteTable() },
+          { name: "list_followups", description: "People who missed a step. Optional kind: not_collected, result_overdue or not_on_treatment. Returns code, site, village, issue and days since screening.", inputSchema: { type: "object", properties: { kind: { type: "string" } } }, execute: (i) => fuTable(i.kind ? String(i.kind) : "") },
+        ],
+      });
+    } else {
+      r = await askClaude(intro + "\n\nData:\n" + JSON.stringify({ overview: overview("all"), sites: siteTable(), followups: fuTable("") }) + "\n\nQuestion: " + q, { tier: "quick", onText: ({ text }) => { out.textContent = text; } });
+    }
+    out.textContent = r.text.trim();
+  } catch (e) { out.textContent = e.text || aiErrorCopy(e); }
+  finally { btn.disabled = false; }
+}
+
+/* ---------- boot ---------- */
+function boot() {
+  $("#site").replaceChildren(...SITES.map((s) => h("option", { value: s.id, text: s.name })));
+  $("#risks").replaceChildren(...RISKS.map((r, i) => h("label", { class: "check" }, h("input", { type: "checkbox", value: r, checked: i === 0 }), r)));
+  $("#symptoms").replaceChildren(...SYMPTOMS.map((r, i) => h("label", { class: "check" }, h("input", { type: "checkbox", value: r, checked: i === 0 }), r)));
+  $("#thrSel").replaceChildren(...[30, 35, 40, 45, 50, 55, 60, 65, 70].map((t) => h("option", { value: t, text: String(t) })));
+  $("#explainBtn").append(icon("spark"), "Explain the result with Claude");
+  $("#sopSend").append(icon("send"));
+  $("#readBtn").addEventListener("click", readXray);
+  $("#explainBtn").addEventListener("click", explain);
+  $("#screenForm").addEventListener("submit", saveRecord);
+  $("#site").addEventListener("change", () => { resetForm(); renderToday(); });
+  $("#xfile").addEventListener("change", (e) => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    const url = URL.createObjectURL(f); $("#xprev").replaceChildren(h("img", { src: url, alt: "X-ray preview" }));
+  });
+  $("#sopForm").addEventListener("submit", (e) => { e.preventDefault(); askSop($("#sopIn").value); });
+  $("#sopIn").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); askSop($("#sopIn").value); } });
+  $("#pDistrict").addEventListener("change", renderProgramme);
+  $("#askBtn").addEventListener("click", () => askData($("#askIn").value));
+  $("#askIn").addEventListener("keydown", (e) => { if (e.key === "Enter") askData($("#askIn").value); });
+  $("#askEx").replaceChildren(...["How many confirmed cases are not on treatment yet?", "Which site has the most people waiting for results?", "Summarise the pilot for the district TB coordinator"].map((q) =>
+    h("button", { class: "btn sm ghost", type: "button", text: q, onclick: () => { $("#askIn").value = q; askData(q); } })));
+  $("#thrSave").addEventListener("click", async () => {
+    const t = parseInt($("#thrSel").value, 10);
+    try { await dbSet("settings", "cad", { threshold: t, updatedAt: new Date().toISOString() }); toast("Threshold set to " + t); }
+    catch (e) { toast(dbErrorCopy(e)); }
+  });
+  $("#sopList").replaceChildren(...SOP.map((p) => h("div", { class: "item" }, h("div", { class: "item-h" }, h("span", { class: "chip", text: p.id }), h("b", { text: p.title })), h("p", { class: "small", text: p.text }))));
+  sopBubble("bot", "Ask me anything about the screening protocol: who to screen, consent, sputum, safety.");
+  setThreshold(50); resetForm(); renderToday(); renderProgramme(); startRouter("station");
+}
+boot();
+capReady.then(() => {
+  watchCollection("screenings", (rs) => { state.records = rs; renderToday(); renderProgramme(); }, { order: "screenedAt", dir: "desc", limit: 1000, statusEl: $("#dbStatus") });
+  if (CAP.db) CAP.db.doc("settings/cad").onSnapshot((d) => { const t = d.exists && Number(d.data().threshold); if (t >= 0 && t <= 100) { setThreshold(t); renderProgramme(); } }, () => {});
+});
+
+</script>
+
+</body></html>
